@@ -366,10 +366,11 @@ if __name__ == "__main__":
         except IndexError:
             pass
 
-    with open(os.path.join(basedir, "meta.json"), "w") as f:
-        json.dump(meta, f)
+    
 
     if meta_only:
+        with open(os.path.join(basedir, "meta.json"), "w") as f:
+            json.dump(meta, f)
         quit()
 
     # Determine number of probes
@@ -437,7 +438,11 @@ if __name__ == "__main__":
                 )
 
 # Take mean of each rotor passage effy
-meta["eff_lost_unst"] = np.mean(eff_lost_unst, 0)
+meta["eff_lost_unst"] = np.mean(eff_lost_unst, 0).tolist()
+
+# Write the full metadata.
+with open(os.path.join(basedir, "meta.json"), "w") as f:
+    json.dump(meta, f)
 
 # Determine number of stators and rotors
 rpms = np.array([g.get_bv("rpm", bidi) for bidi in g.get_block_ids()])
